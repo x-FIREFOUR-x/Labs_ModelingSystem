@@ -167,6 +167,7 @@ namespace Lab1
                 newIndexsIntervals.Add((lowIndex, countsInIntervals.Length));
             }
 
+                //Calculation of the criterion chi^2(x2)
             double x2 = 0;
             for (int i = 0; i < newCountsInIntervals.Count; i++)
             {
@@ -183,10 +184,8 @@ namespace Lab1
 
             Console.WriteLine($"Intervals: {newCountsInIntervals.Count}");
             Console.WriteLine($"X2: {x2}");
-            
-            //ChiSquared chiSquared_ = new ChiSquared(newCountsInIntervals.Count - 2);
-            //Console.WriteLine($"Table value X2: {chiSquared_.InverseCumulativeDistribution(1 - 0.95)}");
-            
+
+                //Selection of the highest confidence сhance that satisfies the criterion chi^2(x2)
             ChiSquared chiSquared = new ChiSquared(newCountsInIntervals.Count - 2);
             double tableX2 = 0;
             double confidenceСhance = 0;

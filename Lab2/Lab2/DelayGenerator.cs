@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Lab2
+﻿namespace Lab2
 {
     public enum Distribution
     {

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Lab2
 {
@@ -13,7 +12,7 @@ namespace Lab2
 
         private static Model CreateSingleModel()
         {
-            Process process = new Process("Process", null, 10, 0);
+            Process process = new Process("Process", null, 10, 1);
 
             Create create = new Create("Create", process, 5);
 

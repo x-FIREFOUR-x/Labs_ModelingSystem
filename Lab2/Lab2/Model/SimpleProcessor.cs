@@ -10,7 +10,7 @@ namespace Lab2.Model
 {
     public class SimpleProcessor: Element
     {
-        public bool Processing { get; private set; }
+        public bool Processing { get; set; }
         public double CurrentTime => _currentTime;
 
         public SimpleProcessor(string name, IDelayGenerator delayGenerator)
@@ -32,6 +32,7 @@ namespace Lab2.Model
         public override void FinishService()
         {
             base.FinishService();
+            Processing = false;
         }
 
         

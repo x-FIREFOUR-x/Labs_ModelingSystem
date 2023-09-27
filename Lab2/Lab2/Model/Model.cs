@@ -16,7 +16,7 @@ namespace Lab2.Model
             _currentTime = 0;
         }
 
-        public void Simulation(double simulationTime)
+        public void Simulation(double simulationTime, bool stepsStats = false)
         {
             while (_currentTime < simulationTime)
             {
@@ -35,9 +35,12 @@ namespace Lab2.Model
                     
                 }
 
-                foreach (var element in _elements)
+                if (stepsStats)
                 {
-                    element.PrintStats(false);
+                    foreach (var element in _elements)
+                    {
+                        element.PrintStats(false);
+                    }
                 }
             }
 

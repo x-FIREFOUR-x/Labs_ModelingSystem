@@ -59,9 +59,12 @@ namespace Lab2.Model
                 if (Math.Abs(processor.NextTime() - processor.CurrentTime) < .0001f)
                 {
                     finishProcessor = processor;
+                    processor.FinishService();
                     break;
                 }
             }
+
+            Console.WriteLine($"{Name}.{finishProcessor.Name}: finish service, time: {_currentTime}");
 
             if (_queueSize > 0)
             {

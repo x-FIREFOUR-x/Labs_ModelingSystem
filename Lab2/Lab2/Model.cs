@@ -30,9 +30,15 @@ namespace Lab2
                 {
                     if (Math.Abs(element.NextTime - _currentTime) < .0001f)
                     {
+                        element.PrintStats(false);
                         element.FinishService();
                     }
                 }
+            }
+
+            foreach (var element in _elements)
+            {
+                element.PrintStats(true);
             }
         }
     }

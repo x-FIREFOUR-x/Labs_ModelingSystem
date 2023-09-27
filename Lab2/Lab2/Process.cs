@@ -9,7 +9,7 @@ namespace Lab2
 
         private int _countFailures;
 
-        
+        private double _averageQueueDividend;
 
         public Process(string name, Element nextElement, double averageDelay, int maxQueueSize = 0, Distribution distribution = Distribution.Constant)
             : base(name, nextElement, averageDelay, distribution)
@@ -65,6 +65,29 @@ namespace Lab2
             {
                 NextTime = Double.PositiveInfinity;
             }
+        }
+
+        public override void UpdatedCurrentTime(double currentTime)
+        {
+            _averageQueueDividend += (currentTime - _currentTime) * _queueSize;
+
+            base.UpdatedCurrentTime(currentTime);
+        }
+
+        public override void PrintStats(bool finalStats)
+        {
+            base.PrintStats(finalStats);
+
+            Console.WriteLine($"\t\tQueue size: {_queueSize}");
+            Console.WriteLine($"\t\tFailures: {_countFailures}");
+
+            if (finalStats)
+            {
+                Console.WriteLine($"\t\tProcessed items: {_countProcessed}");
+                Console.WriteLine($"\t\tAverage queue size: {_averageQueueDividend / _currentTime}");
+                Console.WriteLine($"\t\tFailure probability: {(float)_countFailures / (_countFailures + _countProcessed)}");
+            }
+            
         }
     }
 }

@@ -38,6 +38,8 @@ namespace Lab2
             Console.WriteLine($"{Name}: finish, time: {_currentTime}");
         }
 
-        public virtual void UpdatedCurrentTime(double currentTime) => _currentTime = currentTime;
+        public virtual void UpdatedCurrentTime(double currentTime) { _currentTime = currentTime; }
+
+        public virtual void PrintStats(bool finalStats) { Console.WriteLine($"\n\t*{Name}"); }
     }
 }

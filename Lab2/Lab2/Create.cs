@@ -22,5 +22,11 @@ namespace Lab2
             NextTime = _currentTime + _delayGenerator.GetDelay(_averageDelay);
             _nextElement?.StartService();
         }
+
+        public override void PrintStats(bool finalStats)
+        {
+            base.PrintStats(finalStats);
+            Console.WriteLine($"\t\tCreated items: {_countProcessed}");
+        }
     }
 }

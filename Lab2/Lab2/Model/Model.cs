@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Lab2
+namespace Lab2.Model
 {
     public class Model
     {

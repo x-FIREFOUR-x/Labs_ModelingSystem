@@ -1,16 +1,16 @@
 ﻿using System;
 
-namespace Lab2
+using Lab2.Model.DelayGenerator;
+
+namespace Lab2.Model
 {
     public class Create : Element
     {
-        public Create(string name, Element nextElement, double averageDelay, Distribution distribution = Distribution.Constant)
-           : base(name, nextElement, averageDelay, distribution)
+        public Create(string name, Element nextElement, IDelayGenerator delayGenerator)
+           : base(name, nextElement, delayGenerator)
         {
-            _averageDelay = averageDelay;
-
             _currentTime = 0;
-            NextTime = _currentTime + _delayGenerator.GetDelay(_averageDelay);
+            NextTime = _currentTime + _delayGenerator.GetDelay();
         }
 
         public override void StartService() => throw new NotSupportedException();
@@ -19,7 +19,7 @@ namespace Lab2
         {
             base.FinishService();
 
-            NextTime = _currentTime + _delayGenerator.GetDelay(_averageDelay);
+            NextTime = _currentTime + _delayGenerator.GetDelay();
             _nextElement?.StartService();
         }
 

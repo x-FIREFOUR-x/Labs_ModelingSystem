@@ -1,6 +1,8 @@
 ﻿using System;
 
-namespace Lab2
+using Lab2.Model.DelayGenerator;
+
+namespace Lab2.Model
 {
     class Process : Element
     {
@@ -11,13 +13,11 @@ namespace Lab2
 
         private double _averageQueueDividend;
 
-        public Process(string name, Element nextElement, double averageDelay, int maxQueueSize = 0, Distribution distribution = Distribution.Constant)
-            : base(name, nextElement, averageDelay, distribution)
+        public Process(string name, Element nextElement, int maxQueueSize, IDelayGenerator delayGenerator)
+            : base(name, nextElement, delayGenerator)
         {
             _queueSize = 0;
             _maxQueueSize = maxQueueSize;
-
-            _averageDelay = averageDelay;
 
             _processing = false;
 
@@ -29,7 +29,7 @@ namespace Lab2
             if (!_processing)
             {
                 _processing = true;
-                NextTime = _currentTime + _delayGenerator.GetDelay(_averageDelay);
+                NextTime = _currentTime + _delayGenerator.GetDelay();
 
                 Console.WriteLine($"{Name}: start service, time: {_currentTime}");
                 return;
@@ -59,7 +59,7 @@ namespace Lab2
             {
                 _queueSize--;
                 _processing = true;
-                NextTime = _currentTime + _delayGenerator.GetDelay(_averageDelay);
+                NextTime = _currentTime + _delayGenerator.GetDelay();
             }
             else
             {

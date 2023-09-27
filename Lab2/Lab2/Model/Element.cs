@@ -1,6 +1,8 @@
 ﻿using System;
 
-namespace Lab2
+using Lab2.Model.DelayGenerator;
+
+namespace Lab2.Model
 {
     public abstract class Element
     {
@@ -10,21 +12,19 @@ namespace Lab2
 
         protected int _countProcessed;
 
-        protected double _averageDelay;
-        protected DelayGenerator _delayGenerator;
+        protected IDelayGenerator _delayGenerator;
         public double NextTime { get; protected set; }
         protected double _currentTime;
 
         protected Element _nextElement;
 
-        public Element(string name, Element nextElement, double averageDelay, Distribution distribution)
+        public Element(string name, Element nextElement, IDelayGenerator delayGenerator)
         {
-            _averageDelay = averageDelay;
             Name = name;
 
             _currentTime = 0;
 
-            _delayGenerator = new(distribution);
+            _delayGenerator = delayGenerator;
 
             _nextElement = nextElement;
         }

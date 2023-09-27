@@ -1,37 +1,40 @@
 ﻿using System.Collections.Generic;
 
+using Lab2.Model;
+using Lab2.Model.DelayGenerator;
+
 namespace Lab2
-{
+{ 
     class Program
     {
         public static void Main(string[] args)
         {
-            Model model = CreateschemeModel();
+            Model.Model model = CreateschemeModel();
             model.Simulation(100);
         }
 
-        private static Model CreateSingleModel()
+        private static Model.Model CreateSingleModel()
         {
-            Process process = new Process("Process", null, 10, 1);
+            Process process = new Process("Process", null, 1, new ConstantDelayGenerator(10));
 
-            Create create = new Create("Create", process, 5);
+            Create create = new Create("Create", process, new ConstantDelayGenerator(5));
 
             List<Element> elements = new();
             elements.Add(create);
             elements.Add(process);
 
-            return new Model(elements);
+            return new Model.Model(elements);
         }
 
-        private static Model CreateschemeModel()
+        private static Model.Model CreateschemeModel()
         {
-            Process process3 = new Process("Process3", null, 5, 1);
+            Process process3 = new Process("Process3", null, 1,  new UniformDelayGenerator(7, 10));
 
-            Process process2 = new Process("Process2", process3, 10, 2);
+            Process process2 = new Process("Process2", process3, 2, new UniformDelayGenerator(5, 10));
 
-            Process process1 = new Process("Process1", process2, 8, 1);
+            Process process1 = new Process("Process1", process2, 1, new UniformDelayGenerator(3, 10));
 
-            Create create = new Create("Create", process1, 5);
+            Create create = new Create("Create", process1, new ConstantDelayGenerator(5));
 
             List<Element> elements = new();
             elements.Add(create);
@@ -39,7 +42,7 @@ namespace Lab2
             elements.Add(process2);
             elements.Add(process3);
 
-            return new Model(elements);
+            return new Model.Model(elements);
         }
     }
 }

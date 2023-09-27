@@ -10,7 +10,7 @@ namespace Lab2.Model
            : base(name, nextElement, delayGenerator)
         {
             _currentTime = 0;
-            NextTime = _currentTime + _delayGenerator.GetDelay();
+            SetNextTime(_currentTime + _delayGenerator.GetDelay());
         }
 
         public override void StartService() => throw new NotSupportedException();
@@ -19,7 +19,9 @@ namespace Lab2.Model
         {
             base.FinishService();
 
-            NextTime = _currentTime + _delayGenerator.GetDelay();
+            Console.WriteLine($"{Name}: finish, time: {_currentTime}");
+
+            SetNextTime(_currentTime + _delayGenerator.GetDelay());
             _nextElement?.StartService();
         }
 
@@ -28,5 +30,7 @@ namespace Lab2.Model
             base.PrintStats(finalStats);
             Console.WriteLine($"\t\tCreated items: {_countProcessed}");
         }
+
+        public override void UpdatedCurrentTime(double currentTime) { _currentTime = currentTime; }
     }
 }

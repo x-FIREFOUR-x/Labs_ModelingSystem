@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Collections.Generic;
 using Lab2.Model.DelayGenerator;
 
 namespace Lab2.Model
@@ -13,36 +13,36 @@ namespace Lab2.Model
 
         private double _averageQueueDividend;
 
-        public Process(string name, Element nextElement, int maxQueueSize, IDelayGenerator delayGenerator)
-            : base(name, nextElement, delayGenerator)
+
+        private List<SimpleProcessor> _processors;
+
+        public Process(string name, Element nextElement, int maxQueueSize, List<SimpleProcessor> processors)
+            : base(name, nextElement, null)
         {
             _queueSize = 0;
             _maxQueueSize = maxQueueSize;
 
-            _processing = false;
+            _processors = processors;
 
-            NextTime = Double.PositiveInfinity;
+            SetNextTime(Double.PositiveInfinity);
         }
 
         public override void StartService()
         {
-            if (!_processing)
+            Console.Write(Name);
+            if (TryStartService())
             {
-                _processing = true;
-                NextTime = _currentTime + _delayGenerator.GetDelay();
-
-                Console.WriteLine($"{Name}: start service, time: {_currentTime}");
                 return;
             }
 
             if(_queueSize < _maxQueueSize)
             {
-                Console.WriteLine($"{Name}: add item in queue, time: {_currentTime}");
+                Console.WriteLine($": add item in queue, time: {_currentTime}");
                 _queueSize++;
                 return;
             }
 
-            Console.WriteLine($"{Name}: failure, time: {_currentTime}");
+            Console.WriteLine($": failure, time: {_currentTime}");
             _countFailures++;
         }
 
@@ -51,27 +51,40 @@ namespace Lab2.Model
         {
             base.FinishService();
 
-            _processing = false;
-
             _nextElement?.StartService();
 
-            if(_queueSize > 0)
+            SimpleProcessor finishProcessor = null;
+            foreach (var processor in _processors)
             {
+                if (Math.Abs(processor.NextTime() - processor.CurrentTime) < .0001f)
+                {
+                    finishProcessor = processor;
+                    break;
+                }
+            }
+
+            if (_queueSize > 0)
+            {
+                Console.Write(Name);
+
                 _queueSize--;
-                _processing = true;
-                NextTime = _currentTime + _delayGenerator.GetDelay();
+                finishProcessor.StartService();
             }
             else
             {
-                NextTime = Double.PositiveInfinity;
+                finishProcessor.SetNextTime(Double.PositiveInfinity);
             }
         }
 
         public override void UpdatedCurrentTime(double currentTime)
         {
             _averageQueueDividend += (currentTime - _currentTime) * _queueSize;
-
             base.UpdatedCurrentTime(currentTime);
+
+            foreach (var processor in _processors)
+            {
+                processor.UpdatedCurrentTime(currentTime);
+            }
         }
 
         public override void PrintStats(bool finalStats)
@@ -80,14 +93,56 @@ namespace Lab2.Model
 
             Console.WriteLine($"\t\tQueue size: {_queueSize}");
             Console.WriteLine($"\t\tFailures: {_countFailures}");
+            Console.WriteLine($"\t\tProcessed items: {_countProcessed}");
 
             if (finalStats)
             {
-                Console.WriteLine($"\t\tProcessed items: {_countProcessed}");
                 Console.WriteLine($"\t\tAverage queue size: {_averageQueueDividend / _currentTime}");
                 Console.WriteLine($"\t\tFailure probability: {(float)_countFailures / (_countFailures + _countProcessed)}");
             }
             
+        }
+
+        private bool TryStartService()
+        {
+            foreach(var processor in _processors)
+            {
+                if(!processor.Processing)
+                {
+                    processor.StartService();
+
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public override bool TryFinish()
+        {
+            foreach (var processor in _processors)
+            {
+                if (Math.Abs(processor.NextTime() - processor.CurrentTime) < .0001f)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public override double NextTime()
+        {
+            double time = Double.PositiveInfinity;
+            foreach (var processor in _processors)
+            {
+                if (time > processor.NextTime())
+                {
+                    time = processor.NextTime();
+                }
+            }
+
+            return time;
         }
     }
 }

@@ -8,15 +8,23 @@ namespace Lab2.Model
     {
         public string Name { get; private set; }
 
-        protected bool _processing;
-
         protected int _countProcessed;
 
         protected IDelayGenerator _delayGenerator;
-        public double NextTime { get; protected set; }
+        private double _nextTime;
         protected double _currentTime;
 
         protected Element _nextElement;
+
+        public virtual double NextTime()
+        {
+            return _nextTime;
+        }
+
+        public void SetNextTime(double nextTime)
+        {
+            _nextTime = nextTime;
+        }
 
         public Element(string name, Element nextElement, IDelayGenerator delayGenerator)
         {
@@ -34,8 +42,16 @@ namespace Lab2.Model
         public virtual void FinishService() 
         { 
             _countProcessed++;
+        }
 
-            Console.WriteLine($"{Name}: finish, time: {_currentTime}");
+        public virtual bool TryFinish() 
+        {
+            if (Math.Abs(_nextTime - _currentTime) < .0001f)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         public virtual void UpdatedCurrentTime(double currentTime) { _currentTime = currentTime; }

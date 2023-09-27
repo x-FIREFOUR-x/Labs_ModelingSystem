@@ -20,19 +20,24 @@ namespace Lab2.Model
         {
             while (_currentTime < simulationTime)
             {
-                Element nextElement = _elements.OrderBy(item => item.NextTime).First();
-                _currentTime = nextElement.NextTime;
+                Element nextElement = _elements.OrderBy(item => item.NextTime()).First();
+                _currentTime = nextElement.NextTime();
 
                 foreach (var element in _elements)
                     element.UpdatedCurrentTime(_currentTime);
 
                 foreach (var element in _elements)
                 {
-                    if (Math.Abs(element.NextTime - _currentTime) < .0001f)
+                    if (element.TryFinish())
                     {
-                        element.PrintStats(false);
                         element.FinishService();
                     }
+                    
+                }
+
+                foreach (var element in _elements)
+                {
+                    element.PrintStats(false);
                 }
             }
 

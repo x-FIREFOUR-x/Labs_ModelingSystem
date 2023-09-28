@@ -2,6 +2,7 @@
 
 using Lab2.Model;
 using Lab2.Model.DelayGenerator;
+using Lab2.Model.Elemets;
 
 namespace Lab2
 { 
@@ -10,7 +11,7 @@ namespace Lab2
         public static void Main(string[] args)
         {
             Model.Model model = CreateSchemeModel();
-            model.Simulation(100);
+            model.Simulation(100, true);
 
             Model.Model model2 = CreateSchemeModel2();
             model2.Simulation(100, true);

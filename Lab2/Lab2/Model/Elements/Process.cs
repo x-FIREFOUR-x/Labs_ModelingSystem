@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Lab2.Model
+namespace Lab2.Model.Elemets
 {
     class Process : Element
     {

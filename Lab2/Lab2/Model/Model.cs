@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System;
+
+using Lab2.Model.Elemets;
 
 namespace Lab2.Model
 {
@@ -25,6 +28,7 @@ namespace Lab2.Model
                 foreach (var element in _elements)
                     element.UpdatedCurrentTime(_currentTime);
 
+                Console.WriteLine();
                 foreach (var element in _elements)
                 {
                     if (element.TryFinish())
@@ -33,7 +37,7 @@ namespace Lab2.Model
                     }
                     
                 }
-
+                
                 if (stepsStats)
                 {
                     foreach (var element in _elements)
@@ -43,10 +47,12 @@ namespace Lab2.Model
                 }
             }
 
+            Console.WriteLine("\n=========================================================");
             foreach (var element in _elements)
             {
                 element.PrintStats(true);
             }
+            Console.WriteLine("=========================================================");
         }
     }
 }

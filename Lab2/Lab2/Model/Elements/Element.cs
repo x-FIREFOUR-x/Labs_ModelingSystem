@@ -2,7 +2,7 @@
 
 using Lab2.Model.DelayGenerator;
 
-namespace Lab2.Model
+namespace Lab2.Model.Elemets
 {
     public abstract class Element
     {
@@ -55,6 +55,6 @@ namespace Lab2.Model
 
         public virtual void UpdatedCurrentTime(double currentTime) { _currentTime = currentTime; }
 
-        public virtual void PrintStats(bool finalStats) { Console.WriteLine($"\n\t*{Name}"); }
+        public virtual void PrintStats(bool finalStats) { Console.WriteLine($"\t*{Name}"); }
     }
 }

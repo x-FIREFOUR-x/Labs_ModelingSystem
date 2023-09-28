@@ -2,7 +2,7 @@
 
 using Lab2.Model.DelayGenerator;
 
-namespace Lab2.Model
+namespace Lab2.Model.Elemets
 {
     public class SimpleProcessor: Element
     {

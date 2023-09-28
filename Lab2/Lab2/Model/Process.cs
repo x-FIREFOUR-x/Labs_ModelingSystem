@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Lab2.Model.DelayGenerator;
 
 namespace Lab2.Model
 {
@@ -13,10 +12,10 @@ namespace Lab2.Model
 
         private double _averageQueueDividend;
 
+        private List<Element> _processors;
 
-        private List<SimpleProcessor> _processors;
 
-        public Process(string name, Element nextElement, int maxQueueSize, List<SimpleProcessor> processors)
+        public Process(string name, Element nextElement, int maxQueueSize, List<Element> processors)
             : base(name, nextElement, null)
         {
             _queueSize = 0;
@@ -46,14 +45,13 @@ namespace Lab2.Model
             _countFailures++;
         }
 
-
         public override void FinishService()
         {
             base.FinishService();
 
             _nextElement?.StartService();
 
-            SimpleProcessor finishProcessor = null;
+            Element finishProcessor = null;
             foreach (var processor in _processors)
             {
                 if (Math.Abs(processor.NextTime() - processor.CurrentTime) < .0001f)

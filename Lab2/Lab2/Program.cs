@@ -9,8 +9,8 @@ namespace Lab2
     {
         public static void Main(string[] args)
         {
-            //Model.Model model = CreateSchemeModel();
-            //model.Simulation(100);
+            Model.Model model = CreateSchemeModel();
+            model.Simulation(100);
 
             Model.Model model2 = CreateSchemeModel2();
             model2.Simulation(100, true);
@@ -21,7 +21,7 @@ namespace Lab2
 
         private static Model.Model CreateSingleModel()
         {
-            Process process = new Process("Process", null, 1, new List<SimpleProcessor> {
+            Process process = new Process("Process", null, 1, new List<Element> {
                 new SimpleProcessor("p3", new ConstantDelayGenerator(10))
             });
 
@@ -36,15 +36,15 @@ namespace Lab2
 
         private static Model.Model CreateSchemeModel()
         {
-            Process process3 = new Process("Process3", null, 1, new List<SimpleProcessor> {
+            Process process3 = new Process("Process3", null, 1, new List<Element> {
                 new SimpleProcessor("p3", new UniformDelayGenerator(7, 10))
             });
 
-            Process process2 = new Process("Process2", process3, 2, new List<SimpleProcessor> {
+            Process process2 = new Process("Process2", process3, 2, new List<Element> {
                 new SimpleProcessor("p2", new UniformDelayGenerator(5, 10)) 
             });
 
-            Process process1 = new Process("Process1", process2, 1, new List<SimpleProcessor> {
+            Process process1 = new Process("Process1", process2, 1, new List<Element> {
                 new SimpleProcessor("p1", new UniformDelayGenerator(3, 10)) 
             });
 
@@ -61,15 +61,15 @@ namespace Lab2
 
         private static Model.Model CreateSchemeModel2()
         {
-            Process process3 = new Process("Process3", null, 1, new List<SimpleProcessor> {
+            Process process3 = new Process("Process3", null, 1, new List<Element> {
                 new SimpleProcessor("p3", new ConstantDelayGenerator(6))
             });
 
-            Process process2 = new Process("Process2", process3, 2, new List<SimpleProcessor> {
+            Process process2 = new Process("Process2", process3, 2, new List<Element> {
                 new SimpleProcessor("p2", new ConstantDelayGenerator(5))
             });
 
-            Process process1 = new Process("Process1", process2, 1, new List<SimpleProcessor> {
+            Process process1 = new Process("Process1", process2, 1, new List<Element> {
                 new SimpleProcessor("p1", new ConstantDelayGenerator(10))
             });
 
@@ -87,15 +87,15 @@ namespace Lab2
 
     private static Model.Model CreateModelCombineProcess()
         {
-            Process process3 = new Process("Process3", null, 1, new List<SimpleProcessor> {
+            Process process3 = new Process("Process3", null, 1, new List<Element> {
                 new SimpleProcessor("p3", new ConstantDelayGenerator(6))
             });
 
-            Process process2 = new Process("Process2", process3, 2, new List<SimpleProcessor> {
+            Process process2 = new Process("Process2", process3, 2, new List<Element> {
                 new SimpleProcessor("p2", new ConstantDelayGenerator(5))
             });
 
-            Process process1 = new Process("Process1", process2, 1, new List<SimpleProcessor> {
+            Process process1 = new Process("Process1", process2, 1, new List<Element> {
                 new SimpleProcessor("p1", new ConstantDelayGenerator(10)),
                 new SimpleProcessor("p2", new ConstantDelayGenerator(10)),
             });

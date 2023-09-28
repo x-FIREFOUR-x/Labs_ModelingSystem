@@ -8,6 +8,8 @@ namespace Lab2.Model
     {
         public string Name { get; private set; }
 
+        public bool Processing { get; set; }
+
         protected int _countProcessed;
 
         protected IDelayGenerator _delayGenerator;
@@ -16,15 +18,12 @@ namespace Lab2.Model
 
         protected Element _nextElement;
 
-        public virtual double NextTime()
-        {
-            return _nextTime;
-        }
-
-        public void SetNextTime(double nextTime)
-        {
-            _nextTime = nextTime;
-        }
+        public virtual double NextTime() {return _nextTime;}
+        
+        public void SetNextTime(double nextTime) => _nextTime = nextTime;
+        
+        public virtual double CurrentTime => _currentTime; 
+       
 
         public Element(string name, Element nextElement, IDelayGenerator delayGenerator)
         {

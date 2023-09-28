@@ -2,7 +2,7 @@
 
 using Lab2.Model.DelayGenerator;
 
-namespace Lab2.Model.Elemets
+namespace Lab2.Model.Elements
 {
     public abstract class Element
     {
@@ -16,7 +16,7 @@ namespace Lab2.Model.Elemets
         private double _nextTime;
         protected double _currentTime;
 
-        protected Element _nextElement;
+        public NextElementSelector NextElementSelector { protected get; set; }
 
         public virtual double NextTime() {return _nextTime;}
         
@@ -25,15 +25,13 @@ namespace Lab2.Model.Elemets
         public virtual double CurrentTime => _currentTime; 
        
 
-        public Element(string name, Element nextElement, IDelayGenerator delayGenerator)
+        public Element(string name, IDelayGenerator delayGenerator)
         {
             Name = name;
 
             _currentTime = 0;
 
             _delayGenerator = delayGenerator;
-
-            _nextElement = nextElement;
         }
 
         public virtual void StartService() { }

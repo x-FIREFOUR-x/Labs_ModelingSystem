@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Lab2.Model.Elemets
+namespace Lab2.Model.Elements
 {
     class Process : Element
     {
@@ -15,8 +15,8 @@ namespace Lab2.Model.Elemets
         private List<Element> _processors;
 
 
-        public Process(string name, Element nextElement, int maxQueueSize, List<Element> processors)
-            : base(name, nextElement, null)
+        public Process(string name, int maxQueueSize, List<Element> processors)
+            : base(name, null)
         {
             _queueSize = 0;
             _maxQueueSize = maxQueueSize;
@@ -49,7 +49,8 @@ namespace Lab2.Model.Elemets
         {
             base.FinishService();
 
-            _nextElement?.StartService();
+            Element nextElement = NextElementSelector.GetNextElement();
+            nextElement?.StartService();
 
             Element finishProcessor = null;
             foreach (var processor in _processors)

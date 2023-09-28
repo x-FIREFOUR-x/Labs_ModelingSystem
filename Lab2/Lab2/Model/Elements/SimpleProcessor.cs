@@ -2,12 +2,12 @@
 
 using Lab2.Model.DelayGenerator;
 
-namespace Lab2.Model.Elemets
+namespace Lab2.Model.Elements
 {
     public class SimpleProcessor: Element
     {
         public SimpleProcessor(string name, IDelayGenerator delayGenerator)
-            :base(name, null, delayGenerator)
+            :base(name, delayGenerator)
         {
             Processing = false;
 

@@ -2,12 +2,12 @@
 
 using Lab2.Model.DelayGenerator;
 
-namespace Lab2.Model.Elemets
+namespace Lab2.Model.Elements
 {
     public class Create : Element
     {
-        public Create(string name, Element nextElement, IDelayGenerator delayGenerator)
-           : base(name, nextElement, delayGenerator)
+        public Create(string name, IDelayGenerator delayGenerator)
+           : base(name, delayGenerator)
         {
             _currentTime = 0;
             SetNextTime(_currentTime + _delayGenerator.GetDelay());
@@ -22,7 +22,9 @@ namespace Lab2.Model.Elemets
             Console.WriteLine($"{Name}: finish, time: {_currentTime}");
 
             SetNextTime(_currentTime + _delayGenerator.GetDelay());
-            _nextElement?.StartService();
+
+            Element nextElement = NextElementSelector.GetNextElement();
+            nextElement?.StartService();
         }
 
         public override void PrintStats(bool finalStats)

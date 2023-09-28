@@ -2,7 +2,7 @@
 using System.Linq;
 using System;
 
-using Lab2.Model.Elemets;
+using Lab2.Model.Elements;
 
 namespace Lab2.Model
 {

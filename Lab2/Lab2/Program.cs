@@ -17,7 +17,7 @@ namespace Lab2
             //model1.Simulation(100, true);
 
             //Model.Model model2 = CreateSchemeModel2();
-            //model2.Simulation(100, true);
+            //model2.Simulation(100);
 
             //Model.Model model3 = CreateModelCombineProcess();
             //model3.Simulation(100);
@@ -28,8 +28,8 @@ namespace Lab2
 
         private static Model.Model CreateSingleModel()
         {
-            Process process = new Process("Process", 1, new List<Element> {
-                new SimpleProcessor("p3", new ConstantDelayGenerator(10))
+            Process process = new Process("Process", 4, new List<Element> {
+                new SimpleProcessor("p3", new ConstantDelayGenerator(8))
             });
             process.NextElementSelector = new NextElementSelector(new List<(Element, double)>());
 
@@ -74,22 +74,22 @@ namespace Lab2
 
         private static Model.Model CreateSchemeModel2()
         {
-            Process process3 = new Process("Process3", 1, new List<Element> {
-                new SimpleProcessor("p3", new ConstantDelayGenerator(6))
+            Process process3 = new Process("Process3", 4, new List<Element> {
+                new SimpleProcessor("p3", new ConstantDelayGenerator(5))
             });
             process3.NextElementSelector = new NextElementSelector(new List<(Element, double)>());
 
-            Process process2 = new Process("Process2", 2, new List<Element> {
-                new SimpleProcessor("p2", new ConstantDelayGenerator(5))
+            Process process2 = new Process("Process2", 4, new List<Element> {
+                new SimpleProcessor("p2", new ConstantDelayGenerator(4))
             });
             process2.NextElementSelector = new NextElementSelector(new List<(Element, double)> { (process3, 1.0) });
 
-            Process process1 = new Process("Process1", 1, new List<Element> {
-                new SimpleProcessor("p1", new ConstantDelayGenerator(10))
+            Process process1 = new Process("Process1", 4, new List<Element> {
+                new SimpleProcessor("p1", new ConstantDelayGenerator(3))
             });
             process1.NextElementSelector = new NextElementSelector(new List<(Element, double)> { (process2, 1.0) });
 
-            Create create = new Create("Create", new ConstantDelayGenerator(5));
+            Create create = new Create("Create", new ConstantDelayGenerator(2));
             create.NextElementSelector = new NextElementSelector(new List<(Element, double)> { (process1, 1.0) });
 
             List<Element> elements = new();
@@ -104,23 +104,23 @@ namespace Lab2
 
         private static Model.Model CreateModelCombineProcess()
         {
-            Process process3 = new Process("Process3", 1, new List<Element> {
-                new SimpleProcessor("p3", new ConstantDelayGenerator(6))
+            Process process3 = new Process("Process3", 4, new List<Element> {
+                new SimpleProcessor("p1", new ConstantDelayGenerator(5))
             });
             process3.NextElementSelector = new NextElementSelector(new List<(Element, double)>());
 
-            Process process2 = new Process("Process2", 2, new List<Element> {
-                new SimpleProcessor("p2", new ConstantDelayGenerator(5))
+            Process process2 = new Process("Process2", 4, new List<Element> {
+                new SimpleProcessor("p1", new ConstantDelayGenerator(4))
             });
             process2.NextElementSelector = new NextElementSelector(new List<(Element, double)> { (process3, 1.0) });
 
-            Process process1 = new Process("Process1", 1, new List<Element> {
-                new SimpleProcessor("p1", new ConstantDelayGenerator(10)),
-                new SimpleProcessor("p2", new ConstantDelayGenerator(10)),
+            Process process1 = new Process("Process1", 4, new List<Element> {
+                new SimpleProcessor("p1", new ConstantDelayGenerator(3)),
+                new SimpleProcessor("p2", new ConstantDelayGenerator(3)),
             });
             process1.NextElementSelector = new NextElementSelector(new List<(Element, double)> { (process2, 1.0) });
 
-            Create create = new Create("Create", new ConstantDelayGenerator(5));
+            Create create = new Create("Create", new ConstantDelayGenerator(2));
             create.NextElementSelector = new NextElementSelector(new List<(Element, double)> { (process1, 1.0) });
 
             List<Element> elements = new();
@@ -135,18 +135,17 @@ namespace Lab2
         private static Model.Model CreateModelProcessSomeExits()
         {
 
-            Process process2 = new Process("Process2", 2, new List<Element> {
-                new SimpleProcessor("p2", new ConstantDelayGenerator(5))
+            Process process2 = new Process("Process2", 1, new List<Element> {
+                new SimpleProcessor("p2", new ConstantDelayGenerator(4))
             });
             process2.NextElementSelector = new NextElementSelector(new List<(Element, double)> ());
 
             Process process1 = new Process("Process1", 1, new List<Element> {
-                new SimpleProcessor("p1", new ConstantDelayGenerator(10)),
-                new SimpleProcessor("p2", new ConstantDelayGenerator(10)),
+                new SimpleProcessor("p1", new ConstantDelayGenerator(3)),
             });
-            process1.NextElementSelector = new NextElementSelector(new List<(Element, double)> { (process1, 0.5), (process2, 0.5) });
+            process1.NextElementSelector = new NextElementSelector(new List<(Element, double)> { (process1, 0.25), (process2, 0.75) });
 
-            Create create = new Create("Create", new ConstantDelayGenerator(5));
+            Create create = new Create("Create", new ConstantDelayGenerator(2));
             create.NextElementSelector = new NextElementSelector(new List<(Element, double)> { (process1, 1.0) });
 
             List<Element> elements = new();

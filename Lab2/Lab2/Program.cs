@@ -23,7 +23,7 @@ namespace Lab2
             //model3.Simulation(100);
 
             Model.Model model4 = CreateModelProcessSomeExits();
-            model4.Simulation(100);
+            model4.Simulation(100, true);
         }
 
         private static Model.Model CreateSingleModel()

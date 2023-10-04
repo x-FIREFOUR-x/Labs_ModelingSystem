@@ -40,19 +40,21 @@ namespace Lab2.Model
                 
                 if (stepsStats)
                 {
+                    Console.WriteLine("\n--------------------------- Current Stats -----------------------------");
                     foreach (var element in _elements)
                     {
                         element.PrintStats(false);
                     }
+                    Console.WriteLine("-----------------------------------------------------------------------");
                 }
             }
 
-            Console.WriteLine("\n=========================================================");
+            Console.WriteLine("\n========================== Finish Stats ===============================");
             foreach (var element in _elements)
             {
                 element.PrintStats(true);
             }
-            Console.WriteLine("=========================================================");
+            Console.WriteLine("========================================================================");
         }
     }
 }

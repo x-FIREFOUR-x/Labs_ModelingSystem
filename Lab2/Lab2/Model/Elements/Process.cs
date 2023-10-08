@@ -52,29 +52,25 @@ namespace Lab2.Model.Elements
             Element nextElement = NextElementSelector.GetNextElement();
             nextElement?.StartService();
 
-            Element finishProcessor = null;
-            foreach (var processor in _processors)
+            foreach (var finishProcessor in _processors)
             {
-                if (Math.Abs(processor.NextTime() - processor.CurrentTime) < .0001f)
+                if (Math.Abs(finishProcessor.NextTime() - finishProcessor.CurrentTime) < .0001f)
                 {
-                    finishProcessor = processor;
-                    processor.FinishService();
-                    break;
+                    finishProcessor.FinishService();
+                    Console.WriteLine($"{Name}.{finishProcessor.Name}: finish service, time: {_currentTime}");
+
+                    if (_queueSize > 0)
+                    {
+                        Console.Write(Name);
+
+                        _queueSize--;
+                        finishProcessor.StartService();
+                    }
+                    else
+                    {
+                        finishProcessor.SetNextTime(Double.PositiveInfinity);
+                    }
                 }
-            }
-
-            Console.WriteLine($"{Name}.{finishProcessor.Name}: finish service, time: {_currentTime}");
-
-            if (_queueSize > 0)
-            {
-                Console.Write(Name);
-
-                _queueSize--;
-                finishProcessor.StartService();
-            }
-            else
-            {
-                finishProcessor.SetNextTime(Double.PositiveInfinity);
             }
         }
 

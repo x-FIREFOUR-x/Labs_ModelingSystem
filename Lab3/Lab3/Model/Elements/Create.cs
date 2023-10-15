@@ -9,6 +9,7 @@ namespace Lab3.Model.Elements
         public Create(string name, IDelayGenerator delayGenerator)
            : base(name, delayGenerator)
         {
+            Processing = true;
             _currentTime = 0;
             SetNextTime(_currentTime + _delayGenerator.GetDelay());
         }
@@ -32,7 +33,5 @@ namespace Lab3.Model.Elements
             base.PrintStats(finalStats);
             Console.WriteLine($"\t\tCreated items: {_countProcessed}");
         }
-
-        public override void UpdatedCurrentTime(double currentTime) { _currentTime = currentTime; }
     }
 }

@@ -16,6 +16,8 @@ namespace Lab3.Model.Elements
         private double _nextTime;
         protected double _currentTime;
 
+        protected double _timeWorking;
+
         public NextElementSelector.NextElementSelector NextElementSelector { protected get; set; }
 
         public virtual double NextTime() {return _nextTime;}
@@ -34,7 +36,7 @@ namespace Lab3.Model.Elements
             _delayGenerator = delayGenerator;
         }
 
-        public virtual void StartService() { }
+        public virtual void StartService() { Processing = true; }
 
         public virtual void FinishService() 
         { 
@@ -51,8 +53,19 @@ namespace Lab3.Model.Elements
             return false;
         }
 
-        public virtual void UpdatedCurrentTime(double currentTime) { _currentTime = currentTime; }
+        public virtual void UpdatedCurrentTime(double currentTime) {
+            if(Processing)
+            {
+                _timeWorking += currentTime - _currentTime;
+            }
+            
+            _currentTime = currentTime; 
+        }
 
-        public virtual void PrintStats(bool finalStats) { Console.WriteLine($"\t*{Name}"); }
+        public virtual void PrintStats(bool finalStats) {
+            Console.WriteLine($"\t*{Name}");
+
+            //Console.WriteLine($"\t\tAverage workload: {_timeWorking / _currentTime}");
+        }
     }
 }

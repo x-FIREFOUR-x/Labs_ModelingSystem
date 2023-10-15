@@ -72,6 +72,17 @@ namespace Lab3.Model.Elements
                     }
                 }
             }
+
+            bool isWorking = false;
+            foreach (var processors in _processors)
+            {
+                if (processors.Processing)
+                {
+                    isWorking = true;
+                    break;
+                }
+            }
+            Processing = isWorking;
         }
 
         public override void UpdatedCurrentTime(double currentTime)
@@ -97,6 +108,7 @@ namespace Lab3.Model.Elements
             {
                 Console.WriteLine($"\t\tAverage queue size: {_averageQueueDividend / _currentTime}");
                 Console.WriteLine($"\t\tFailure probability: {(float)_countFailures / (_countFailures + _countProcessed)}");
+                Console.WriteLine($"\t\tAverage workload: {_timeWorking / _currentTime}");
             }
             
         }
@@ -107,6 +119,7 @@ namespace Lab3.Model.Elements
             {
                 if(!processor.Processing)
                 {
+                    base.StartService();
                     processor.StartService();
 
                     return true;

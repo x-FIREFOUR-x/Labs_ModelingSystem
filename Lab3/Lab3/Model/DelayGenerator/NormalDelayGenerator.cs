@@ -11,7 +11,7 @@ namespace Lab3.Model.DelayGenerator
 
         public NormalDelayGenerator(double averageDelay, double devDelay)
         {
-            if (_devDelay == 0)
+            if (devDelay == 0)
                 throw new ArgumentException("devDelay == 0, it will become constant distribution");
 
             _averageDelay = averageDelay;

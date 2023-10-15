@@ -8,7 +8,7 @@ namespace Lab3.Model.Elements
     {
         public string Name { get; private set; }
 
-        public bool Processing { get; set; }
+        public virtual bool Processing { get; set; }
 
         protected int _countProcessed;
 

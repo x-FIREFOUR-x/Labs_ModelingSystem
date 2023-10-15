@@ -6,12 +6,18 @@ namespace Lab3.Model.Elements
 {
     public class SimpleProcessor: Element
     {
-        public SimpleProcessor(string name, IDelayGenerator delayGenerator)
+        public SimpleProcessor(string name, IDelayGenerator delayGenerator, IDelayGenerator nextDelayGenerator = null)
             :base(name, delayGenerator)
         {
             Processing = false;
-
             SetNextTime(Double.PositiveInfinity);
+
+            if (nextDelayGenerator != null)
+            {
+                Processing = true;
+                SetNextTime(_delayGenerator.GetDelay());
+                _delayGenerator = nextDelayGenerator;
+            }
         }
 
         public override void StartService()
@@ -25,6 +31,13 @@ namespace Lab3.Model.Elements
         {
             base.FinishService();
             Processing = false;
+        }
+
+        public void SetStartConditions(IDelayGenerator newDelayGenerator)
+        {
+            Processing = true;
+            SetNextTime(_delayGenerator.GetDelay());
+            _delayGenerator = newDelayGenerator;
         }
     }
 }

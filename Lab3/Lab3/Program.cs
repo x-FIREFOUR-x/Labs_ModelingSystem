@@ -11,14 +11,36 @@ namespace Lab3
     {
         public static void Main(string[] args)
         {
-            //Model.Model model3 = CreateScheme();
-            //model3.Simulation(100, false);
+            Model.Model model3 = CreateBankModel();
+            model3.Simulation(100, false);
 
-            Model.Model model3 = CreateScheme2();
-            model3.Simulation(100, true);
+            //Model.Model model3 = CreateScheme2();
+            //model3.Simulation(100, true);
 
             //Model.Model model3 = CreateModelCombineProcess();
             //model3.Simulation(100, false);
+        }
+
+        private static Model.Model CreateBankModel()
+        {
+            Process cashier1 = new Process("Cashier1", 3, new List<Element> {
+                new SimpleProcessor("cashier", new NormalDelayGenerator(0.3, 1), new ExponentialDelayGenerator(0.3)),
+            }, 2);
+
+            Process cashier2 = new Process("Cashier2", 3, new List<Element> {
+                new SimpleProcessor("cashier", new NormalDelayGenerator(0.3, 1), new ExponentialDelayGenerator(0.3)),
+            }, 2);
+
+            Create create = new Create("Create", new ExponentialDelayGenerator(0.5));
+            create.NextElementSelector = new NextElementQueuePrioritySelector(new List<(Element, double)> { (cashier1, 2), (cashier2, 1)});
+            create.SetNextTime(0.1);
+
+            List<Element> elements = new();
+            elements.Add(create);
+            elements.Add(cashier1);
+            elements.Add(cashier2);
+
+            return new Model.Model(elements);
         }
 
         private static Model.Model CreateScheme()

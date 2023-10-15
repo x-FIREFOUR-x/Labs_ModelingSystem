@@ -16,7 +16,7 @@ namespace Lab3.Model.Elements
         private double _nextTime;
         protected double _currentTime;
 
-        public NextElementSelector NextElementSelector { protected get; set; }
+        public NextElementSelector.NextElementSelector NextElementSelector { protected get; set; }
 
         public virtual double NextTime() {return _nextTime;}
         

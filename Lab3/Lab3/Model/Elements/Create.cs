@@ -1,10 +1,11 @@
 ﻿using System;
 
 using Lab3.Model.DelayGenerator;
+using Lab3.Model.Queue;
 
 namespace Lab3.Model.Elements
 {
-    public class Create : Element
+    public class Create<T> : Element<T> where T : DefaultQueueItem
     {
         public Create(string name, IDelayGenerator delayGenerator)
            : base(name, delayGenerator)
@@ -24,7 +25,7 @@ namespace Lab3.Model.Elements
 
             SetNextTime(_currentTime + _delayGenerator.GetDelay());
 
-            Element nextElement = NextElementSelector.GetNextElement();
+            Element<T> nextElement = NextElementSelector.GetNextElement();
             nextElement?.StartService();
         }
 

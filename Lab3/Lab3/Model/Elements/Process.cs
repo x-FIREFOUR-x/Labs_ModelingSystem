@@ -1,18 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using Lab3.Model.Queue;
+
 namespace Lab3.Model.Elements
 {
-    class Process : Element
+    class Process<T>: Element<T> where T : DefaultQueueItem
     {
-        public int QueueSize { get; set; }
-        public readonly int MaxQueueSize;
+        private ProcessQueue<T> _queue;
 
         private int _countFailures;
 
         private double _averageQueueDividend;
 
-        private List<Element> _processors;
+        private List<Element<T>> _processors;
+
+        public int QueueSize { get => _queue.Size; }
+        public int QueueMaxSize { get => _queue.MaxSize; }
+
+        public T GetItemWithQueue() { return _queue.GetItem(); }
+        public void PutItemToQueue(T item) { _queue.PutItem(item); }
 
         public override bool Processing
         {
@@ -32,17 +39,20 @@ namespace Lab3.Model.Elements
             set => base.Processing = value;
         }
 
-        public Process(string name, int maxQueueSize, List<Element> processors, int startQueueSize = 0)
+        public Process(string name, int maxQueueSize, List<Element<T>> processors, int startQueueSize = 0)
             : base(name, null)
         {
-            QueueSize = 0;
-            MaxQueueSize = maxQueueSize;
-
             _processors = processors;
-
             SetNextTime(Double.PositiveInfinity);
 
-            QueueSize = startQueueSize;
+            if(startQueueSize == 0)
+            {
+                _queue = new ProcessQueue<T>(maxQueueSize);
+            }
+            else
+            {
+                _queue = new ProcessQueue<T>(maxQueueSize, startQueueSize);
+            }
         }
 
         public override void StartService()
@@ -52,11 +62,12 @@ namespace Lab3.Model.Elements
             {
                 return;
             }
-
-            if(QueueSize < MaxQueueSize)
+            
+            if (QueueSize < QueueMaxSize)
             {
                 Console.WriteLine($": add item in queue, time: {_currentTime}");
-                QueueSize++;
+
+                _queue.PutItem(null);
                 return;
             }
 
@@ -68,7 +79,7 @@ namespace Lab3.Model.Elements
         {
             base.FinishService();
 
-            Element nextElement = NextElementSelector?.GetNextElement();
+            Element<T> nextElement = NextElementSelector?.GetNextElement();
             nextElement?.StartService();
 
             foreach (var finishProcessor in _processors)
@@ -81,8 +92,7 @@ namespace Lab3.Model.Elements
                     if (QueueSize > 0)
                     {
                         Console.Write(Name);
-
-                        QueueSize--;
+                        _queue.GetItem();
                         finishProcessor.StartService();
                     }
                     else
@@ -95,7 +105,7 @@ namespace Lab3.Model.Elements
 
         public override void UpdatedCurrentTime(double currentTime)
         {
-            _averageQueueDividend += (currentTime - _currentTime) * QueueSize;
+            _averageQueueDividend += (currentTime - _currentTime) * _queue.Size;
             base.UpdatedCurrentTime(currentTime);
 
             foreach (var processor in _processors)
@@ -108,7 +118,7 @@ namespace Lab3.Model.Elements
         {
             base.PrintStats(finalStats);
 
-            Console.WriteLine($"\t\tQueue size: {QueueSize}");
+            Console.WriteLine($"\t\tQueue size: {_queue.Size}");
             Console.WriteLine($"\t\tFailures: {_countFailures}");
             Console.WriteLine($"\t\tProcessed items: {_countProcessed}");
 
@@ -118,7 +128,6 @@ namespace Lab3.Model.Elements
                 Console.WriteLine($"\t\tFailure probability: {(float)_countFailures / (_countFailures + _countProcessed)}");
                 Console.WriteLine($"\t\tAverage workload: {_timeWorking / _currentTime}");
             }
-            
         }
 
         private bool TryStartService()

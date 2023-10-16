@@ -2,18 +2,19 @@
 using System.Linq;
 
 using Lab3.Model.Elements;
+using Lab3.Model.Queue;
 
 namespace Lab3.Model.NextElementSelector
 {
-    public class NextElementPrioritySelector : NextElementSelector
+    public class NextElementPrioritySelector<T> : NextElementSelector<T> where T : DefaultQueueItem
     {
-        public NextElementPrioritySelector(List<(Element, double)> nextElements)
+        public NextElementPrioritySelector(List<(Element<T>, double)> nextElements)
             : base(nextElements)
         {
             _nextElements = _nextElements.OrderByDescending(num => num.Item2).ToList();
         }
 
-        public override Element GetNextElement()
+        public override Element<T> GetNextElement()
         {
             if (_nextElements.Count == 1)
                 return _nextElements[0].Item1;

@@ -5,6 +5,7 @@ using Lab3.Model;
 using Lab3.Model.DelayGenerator;
 using Lab3.Model.Elements;
 using Lab3.Model.NextElementSelector;
+using Lab3.Model.Queue;
 
 namespace Lab3
 { 
@@ -12,8 +13,8 @@ namespace Lab3
     {
         public static void Main(string[] args)
         {
-            Model.Model model3 = CreateBankModel();
-            model3.Simulation(100, false);
+            Model<DefaultQueueItem> model3 = CreateBankModel();
+            model3.Simulation(100, true);
 
             //Model.Model model3 = CreateScheme2();
             //model3.Simulation(100, true);
@@ -22,73 +23,77 @@ namespace Lab3
             //model3.Simulation(100, false);
         }
 
-        private static Model.Model CreateBankModel()
+        private static Model<DefaultQueueItem> CreateBankModel()
         {
-            Process cashier1 = new Process("Cashier1", 3, new List<Element> {
-                new SimpleProcessor("cashier", new NormalDelayGenerator(0.3, 1), new ExponentialDelayGenerator(0.3)),
+            Process<DefaultQueueItem> cashier1 = new Process<DefaultQueueItem>("Cashier1", 3, new List<Element<DefaultQueueItem>> {
+                new SimpleProcessor<DefaultQueueItem>("cashier", new NormalDelayGenerator(0.3, 1), new ExponentialDelayGenerator(0.3)),
             }, 2);
 
-            Process cashier2 = new Process("Cashier2", 3, new List<Element> {
-                new SimpleProcessor("cashier", new NormalDelayGenerator(0.3, 1), new ExponentialDelayGenerator(0.3)),
+            Process<DefaultQueueItem> cashier2 = new Process<DefaultQueueItem>("Cashier2", 3, new List<Element<DefaultQueueItem>> {
+                new SimpleProcessor<DefaultQueueItem>("cashier", new NormalDelayGenerator(0.3, 1), new ExponentialDelayGenerator(0.3)),
             }, 2);
 
-            Create create = new Create("Create", new ExponentialDelayGenerator(0.5));
-            create.NextElementSelector = new NextElementQueuePrioritySelector(new List<(Element, double)> { (cashier1, 2), (cashier2, 1)});
+            Create<DefaultQueueItem> create = new Create<DefaultQueueItem>("Create", new ExponentialDelayGenerator(0.5));
+            create.NextElementSelector = new NextElementQueuePrioritySelector<DefaultQueueItem>(
+                new List<(Element<DefaultQueueItem>, double)> { (cashier1, 2), (cashier2, 1)}
+                );
             create.SetNextTime(0.1);
 
-            List<Element> elements = new();
+            List<Element<DefaultQueueItem>> elements = new();
             elements.Add(create);
             elements.Add(cashier1);
             elements.Add(cashier2);
 
-            Action<List<Element>> ActionChangeQueue = (elements) =>
+            Action<List<Element<DefaultQueueItem>>> ActionChangeQueue = (elements) =>
             {
                 foreach (var element in elements)
                 {
-                    if (element is Process process1 && process1.QueueSize == process1.MaxQueueSize)
+                    if (element is Process<DefaultQueueItem> process1 && process1.QueueSize == process1.QueueMaxSize)
                     {
                         foreach (var element2 in elements)
                         {
-                            if (element2 is Process process2 && process1.QueueSize - process2.QueueSize >= 2)
+                            if (element2 is Process<DefaultQueueItem> process2 && process1.QueueSize - process2.QueueSize >= 2)
                             {
-                                process1.QueueSize--;
+                                DefaultQueueItem item = process1.GetItemWithQueue();
 
                                 if (process2.Processing)
                                 {
-                                    process2.QueueSize++;
+                                    process2.PutItemToQueue(item);
                                 }
                                 else
                                 {
                                     process2.StartService();
                                 }
                             }
-                            
                         }
                     }
                 }
             };
-
-            return new Model.Model(elements, ActionChangeQueue);
+            
+            return new Model<DefaultQueueItem>(elements);
         }
 
-        private static Model.Model CreateScheme()
+        
+        private static Model<DefaultQueueItem> CreateScheme()
         {
-            Process process1 = new Process("Process1", 4, new List<Element> {
-                new SimpleProcessor("p1", new ConstantDelayGenerator(5)),
+            Process<DefaultQueueItem> process1 = new Process<DefaultQueueItem>("Process1", 4, new List<Element<DefaultQueueItem>> {
+                new SimpleProcessor<DefaultQueueItem>("p1", new ConstantDelayGenerator(5)),
             });
-            process1.NextElementSelector = new NextElementPrioritySelector(new List<(Element, double)> ());
+            process1.NextElementSelector =
+                new NextElementPrioritySelector<DefaultQueueItem>(new List<(Element<DefaultQueueItem>, double)> ());
 
-            Create create = new Create("Create", new ConstantDelayGenerator(5));
-            create.NextElementSelector = new NextElementPrioritySelector(new List<(Element, double)> { (process1, 1.0) });
+            Create<DefaultQueueItem> create = new Create<DefaultQueueItem>("Create", new ConstantDelayGenerator(5));
+            create.NextElementSelector =
+                new NextElementPrioritySelector<DefaultQueueItem>(new List<(Element<DefaultQueueItem>, double)> { (process1, 1.0) });
 
-            List<Element> elements = new();
+            List<Element<DefaultQueueItem>> elements = new();
             elements.Add(create);
             elements.Add(process1);
 
-            return new Model.Model(elements);
+            return new Model<DefaultQueueItem>(elements);
         }
 
-
+        /*
         private static Model.Model CreateScheme2()
         {
             Process process2 = new Process("Process2", 4, new List<Element> {
@@ -142,5 +147,6 @@ namespace Lab3
 
             return new Model.Model(elements);
         }
+        */
     }
 }

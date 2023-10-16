@@ -1,10 +1,11 @@
 ﻿using System;
 
 using Lab3.Model.DelayGenerator;
+using Lab3.Model.Queue;
 
 namespace Lab3.Model.Elements
 {
-    public abstract class Element
+    public abstract class Element<T> where T : DefaultQueueItem
     {
         public string Name { get; private set; }
 
@@ -18,7 +19,7 @@ namespace Lab3.Model.Elements
 
         protected double _timeWorking;
 
-        public NextElementSelector.NextElementSelector NextElementSelector { protected get; set; }
+        public NextElementSelector.NextElementSelector<T> NextElementSelector { protected get; set; }
 
         public virtual double NextTime() {return _nextTime;}
         

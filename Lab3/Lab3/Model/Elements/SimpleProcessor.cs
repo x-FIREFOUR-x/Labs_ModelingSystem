@@ -1,10 +1,11 @@
 ﻿using System;
 
 using Lab3.Model.DelayGenerator;
+using Lab3.Model.Queue;
 
 namespace Lab3.Model.Elements
 {
-    public class SimpleProcessor: Element
+    public class SimpleProcessor<T> : Element<T> where T : DefaultQueueItem
     {
         public SimpleProcessor(string name, IDelayGenerator delayGenerator, IDelayGenerator nextDelayGenerator = null)
             :base(name, delayGenerator)

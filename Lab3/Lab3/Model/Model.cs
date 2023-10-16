@@ -3,18 +3,19 @@ using System.Linq;
 using System;
 
 using Lab3.Model.Elements;
+using Lab3.Model.Queue;
 
 namespace Lab3.Model
 {
-    public class Model
+    public class Model<T> where T: DefaultQueueItem
     {
         private double _currentTime;
 
-        private readonly List<Element> _elements;
+        private readonly List<Element<T>> _elements;
 
-        private Action<List<Element>> _additionalAction;
+        private Action<List<Element<T>>> _additionalAction;
 
-        public Model(List<Element> elements, Action<List<Element>> additionalAction = null)
+        public Model(List<Element<T>> elements, Action<List<Element<T>>> additionalAction = null)
         {
             _elements = elements;
             _currentTime = 0;
@@ -26,7 +27,7 @@ namespace Lab3.Model
         {
             while (_currentTime < simulationTime)
             {
-                Element nextElement = _elements.OrderBy(item => item.NextTime()).First();
+                Element<T> nextElement = _elements.OrderBy(item => item.NextTime()).First();
                 _currentTime = nextElement.NextTime();
 
                 foreach (var element in _elements)

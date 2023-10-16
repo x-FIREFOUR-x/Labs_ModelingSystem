@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Lab3.Model.Elements;
+using Lab3.Model.Queue;
 
 namespace Lab3.Model.NextElementSelector
 {
-    public class NextElementProbabilitySelector : NextElementSelector
+    public class NextElementProbabilitySelector<T> : NextElementSelector<T> where T : DefaultQueueItem
     {
         private Random _random;
 
-        public NextElementProbabilitySelector(List<(Element, double)> nextElements)
+        public NextElementProbabilitySelector(List<(Element<T>, double)> nextElements)
             : base(nextElements)
         {
             if (nextElements.Count != 0 && nextElements.Sum(t => t.Item2) != 1.0)
@@ -21,7 +22,7 @@ namespace Lab3.Model.NextElementSelector
             _random = new Random();
         }
 
-        public override Element GetNextElement()
+        public override Element<T> GetNextElement()
         {
             if (_nextElements.Count == 1)
                 return _nextElements[0].Item1;

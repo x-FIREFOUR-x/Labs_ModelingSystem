@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System;
 
 using Lab3.Model;
 using Lab3.Model.DelayGenerator;
@@ -40,7 +41,34 @@ namespace Lab3
             elements.Add(cashier1);
             elements.Add(cashier2);
 
-            return new Model.Model(elements);
+            Action<List<Element>> ActionChangeQueue = (elements) =>
+            {
+                foreach (var element in elements)
+                {
+                    if (element is Process process1 && process1.QueueSize == process1.MaxQueueSize)
+                    {
+                        foreach (var element2 in elements)
+                        {
+                            if (element2 is Process process2 && process1.QueueSize - process2.QueueSize >= 2)
+                            {
+                                process1.QueueSize--;
+
+                                if (process2.Processing)
+                                {
+                                    process2.QueueSize++;
+                                }
+                                else
+                                {
+                                    process2.StartService();
+                                }
+                            }
+                            
+                        }
+                    }
+                }
+            };
+
+            return new Model.Model(elements, ActionChangeQueue);
         }
 
         private static Model.Model CreateScheme()

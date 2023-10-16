@@ -12,10 +12,14 @@ namespace Lab3.Model
 
         private readonly List<Element> _elements;
 
-        public Model(List<Element> elements)
+        private Action<List<Element>> _additionalAction;
+
+        public Model(List<Element> elements, Action<List<Element>> additionalAction = null)
         {
             _elements = elements;
             _currentTime = 0;
+
+            _additionalAction = additionalAction;
         }
 
         public void Simulation(double simulationTime, bool stepsStats = false)
@@ -37,7 +41,13 @@ namespace Lab3.Model
                     }
                     
                 }
-                
+
+                if(_additionalAction != null)
+                {
+                    _additionalAction(_elements);
+                }
+
+
                 if (stepsStats)
                 {
                     Console.WriteLine("\n--------------------------- Current Stats -----------------------------");

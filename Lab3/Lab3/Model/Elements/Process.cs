@@ -5,8 +5,8 @@ namespace Lab3.Model.Elements
 {
     class Process : Element
     {
-        public int QueueSize { get; protected set; }
-        private readonly int _maxQueueSize;
+        public int QueueSize { get; set; }
+        public readonly int MaxQueueSize;
 
         private int _countFailures;
 
@@ -36,7 +36,7 @@ namespace Lab3.Model.Elements
             : base(name, null)
         {
             QueueSize = 0;
-            _maxQueueSize = maxQueueSize;
+            MaxQueueSize = maxQueueSize;
 
             _processors = processors;
 
@@ -53,7 +53,7 @@ namespace Lab3.Model.Elements
                 return;
             }
 
-            if(QueueSize < _maxQueueSize)
+            if(QueueSize < MaxQueueSize)
             {
                 Console.WriteLine($": add item in queue, time: {_currentTime}");
                 QueueSize++;

@@ -6,5 +6,7 @@
         {
             return 0;
         }
+
+        public virtual void PrintStats() { }
     }
 }

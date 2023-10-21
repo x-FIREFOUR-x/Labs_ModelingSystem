@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Lab3.Model.Queue
 {
     public class Patient : DefaultQueueItem
     {
-        public int TypePatient { get; private set; }
+        public int TypePatient { get; set; }
+        public int StartTypePatient { get; private set; }
 
         private double _startTime;
         private double _finishTime;
@@ -16,22 +13,27 @@ namespace Lab3.Model.Queue
         public Patient(double startTime)
         {
             _startTime = startTime;
+            _finishTime = double.NaN;
 
             Random rand = new Random();
             float numb = (float)rand.NextDouble();
 
+            int type;
             if(numb <= 0.5)
             {
-                TypePatient = 1;
+                type = 1;
             }
             else if (numb <= 0.6)
             {
-                TypePatient = 2;
+                type = 2;
             }
             else
             {
-                TypePatient = 3;
+                type = 3;
             }
+
+            StartTypePatient = type;
+            TypePatient = type;
         }
 
         public override int GetIndexGenerator()
@@ -42,6 +44,11 @@ namespace Lab3.Model.Queue
         public void Finish(double time)
         {
             _finishTime = time;
+        }
+
+        public override void PrintStats()
+        {
+            Console.WriteLine($"{StartTypePatient};       {Math.Round(_startTime, 2)};      {Math.Round(_finishTime, 2)}");
         }
     }
 }

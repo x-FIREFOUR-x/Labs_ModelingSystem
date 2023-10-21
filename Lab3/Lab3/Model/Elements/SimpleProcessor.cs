@@ -9,6 +9,8 @@ namespace Lab3.Model.Elements
     {
         public T ProcessingItem { get; private set; }
 
+        private Action<T> _additionalAction;
+
         public SimpleProcessor(string name, IDelayGenerator delayGenerator, IDelayGenerator nextDelayGenerator = null)
             :base(name, delayGenerator)
         {
@@ -37,6 +39,24 @@ namespace Lab3.Model.Elements
             }
         }
 
+        public SimpleProcessor(string name, IDelayGenerator delayGenerator, Action<T> additionalAction)
+            : base(name, delayGenerator)
+        {
+            Processing = false;
+            SetNextTime(Double.PositiveInfinity);
+
+            _additionalAction = additionalAction;
+        }
+
+        public SimpleProcessor(string name, List<IDelayGenerator> delayGenerators, Action<T> additionalAction)
+            : base(name, delayGenerators)
+        {
+            Processing = false;
+            SetNextTime(Double.PositiveInfinity);
+
+            _additionalAction = additionalAction;
+        }
+
         public override void StartService(T item)
         {
             ProcessingItem = item;
@@ -52,8 +72,13 @@ namespace Lab3.Model.Elements
         public override void FinishService()
         {
             base.FinishService();
-            Processing = false;
 
+            if (_additionalAction != null)
+            {
+                _additionalAction(ProcessingItem);
+            }
+
+            Processing = false;
             ProcessingItem = null;
         }
 

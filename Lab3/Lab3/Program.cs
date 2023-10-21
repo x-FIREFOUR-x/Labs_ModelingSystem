@@ -13,11 +13,11 @@ namespace Lab3
     {
         public static void Main(string[] args)
         {
-            Model<Patient> modelHospital = CreateHospitalModel();
-            modelHospital.Simulation(300, true);
-
             //Model<DefaultQueueItem> modelBank = CreateBankModel();
             //modelBank.Simulation(100, false);
+
+            Model<Patient> modelHospital = CreateHospitalModel();
+            modelHospital.Simulation(1000, false);
 
             //Model<DefaultQueueItem> model = CreateScheme();
             //model.Simulation(100, false);
@@ -107,9 +107,15 @@ namespace Lab3
                 new SimpleProcessor<Patient>("register", new ErlangDelayGenerator(4.5, 3)),
             });
 
+
+            Action<Patient> ActionChangeTypePatientAfterLab = (item) =>
+            {
+                if (item.TypePatient == 2)
+                    item.TypePatient = 1;
+            };
             Process<Patient> lab = new Process<Patient>("Laboratory", 100, new List<Element<Patient>> {
-                new SimpleProcessor<Patient>("lab1", new ErlangDelayGenerator(4, 2)),
-                new SimpleProcessor<Patient>("lab2", new ErlangDelayGenerator(4, 2))
+                new SimpleProcessor<Patient>("lab1", new ErlangDelayGenerator(4, 2), ActionChangeTypePatientAfterLab),
+                new SimpleProcessor<Patient>("lab2", new ErlangDelayGenerator(4, 2), ActionChangeTypePatientAfterLab)
             });
 
             Dispose<Patient> dispose = new Dispose<Patient>("Exit");
@@ -127,12 +133,12 @@ namespace Lab3
                 new List<(Element<Patient>, double)> { (lab, 1.0) });
 
             lab.NextElementSelector = new NextElementItemTypeSelector<Patient>(
-                new List<(Element<Patient>, double)> { (receptionDepartment, 2), (dispose, 3) });
+                new List<(Element<Patient>, double)> { (receptionDepartment, 1), (dispose, 3) });
 
             Create<Patient> create = new Create<Patient>("Create", new ExponentialDelayGenerator(15));
             create.NextElementSelector = new NextElementPrioritySelector<Patient>(new List<(Element<Patient>, double)>{(receptionDepartment, 1)});
 
-            List<Element<Patient>> elements = new();
+            List <Element<Patient>> elements = new();
             elements.Add(create);
             elements.Add(receptionDepartment);
             elements.Add(wards);

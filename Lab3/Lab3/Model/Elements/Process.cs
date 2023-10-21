@@ -40,7 +40,7 @@ namespace Lab3.Model.Elements
         }
 
         public Process(string name, int maxQueueSize, List<Element<T>> processors, int startQueueSize = 0)
-            : base(name, null)
+            : base(name)
         {
             _processors = processors;
             SetNextTime(Double.PositiveInfinity);
@@ -55,10 +55,10 @@ namespace Lab3.Model.Elements
             }
         }
 
-        public override void StartService()
+        public override void StartService(T item)
         {
             Console.Write(Name);
-            if (TryStartService())
+            if (TryStartService(item))
             {
                 return;
             }
@@ -67,7 +67,7 @@ namespace Lab3.Model.Elements
             {
                 Console.WriteLine($": add item in queue, time: {_currentTime}");
 
-                _queue.PutItem(null);
+                _queue.PutItem(item);
                 return;
             }
 
@@ -79,21 +79,23 @@ namespace Lab3.Model.Elements
         {
             base.FinishService();
 
-            Element<T> nextElement = NextElementSelector?.GetNextElement();
-            nextElement?.StartService();
-
             foreach (var finishProcessor in _processors)
             {
                 if (Math.Abs(finishProcessor.NextTime() - finishProcessor.CurrentTime) < .0001f)
                 {
+                    T item = ((SimpleProcessor<T>)finishProcessor).ProcessingItem;
+
                     finishProcessor.FinishService();
                     Console.WriteLine($"{Name}.{finishProcessor.Name}: finish service, time: {_currentTime}");
+
+                    Element<T> nextElement = NextElementSelector?.GetNextElement(item);
+                    nextElement?.StartService(item);
 
                     if (QueueSize > 0)
                     {
                         Console.Write(Name);
-                        _queue.GetItem();
-                        finishProcessor.StartService();
+                        item = _queue.GetItem();
+                        finishProcessor.StartService(item);
                     }
                     else
                     {
@@ -130,14 +132,14 @@ namespace Lab3.Model.Elements
             }
         }
 
-        private bool TryStartService()
+        private bool TryStartService(T item)
         {
             foreach(var processor in _processors)
             {
                 if(!processor.Processing)
                 {
-                    base.StartService();
-                    processor.StartService();
+                    base.StartService(item);
+                    processor.StartService(item);
 
                     return true;
                 }

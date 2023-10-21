@@ -22,7 +22,7 @@ namespace Lab3.Model.NextElementSelector
             _random = new Random();
         }
 
-        public override Element<T> GetNextElement()
+        public override Element<T> GetNextElement(DefaultQueueItem item)
         {
             if (_nextElements.Count == 1)
                 return _nextElements[0].Item1;

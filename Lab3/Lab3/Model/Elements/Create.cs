@@ -7,15 +7,19 @@ namespace Lab3.Model.Elements
 {
     public class Create<T> : Element<T> where T : DefaultQueueItem
     {
+        private ItemFactory<T> _itemFactory;
+
         public Create(string name, IDelayGenerator delayGenerator)
            : base(name, delayGenerator)
         {
             Processing = true;
             _currentTime = 0;
-            SetNextTime(_currentTime + _delayGenerator.GetDelay());
+            SetNextTime(_currentTime + _delayGenerators[0].GetDelay());
+
+            _itemFactory = new ItemFactory<T>();
         }
 
-        public override void StartService() => throw new NotSupportedException();
+        public override void StartService(T item) => throw new NotSupportedException();
 
         public override void FinishService()
         {
@@ -23,10 +27,12 @@ namespace Lab3.Model.Elements
 
             Console.WriteLine($"{Name}: finish, time: {_currentTime}");
 
-            SetNextTime(_currentTime + _delayGenerator.GetDelay());
+            SetNextTime(_currentTime + _delayGenerators[0].GetDelay());
 
-            Element<T> nextElement = NextElementSelector.GetNextElement();
-            nextElement?.StartService();
+            T item = _itemFactory.CreateItem(_currentTime);
+
+            Element<T> nextElement = NextElementSelector.GetNextElement(item);
+            nextElement?.StartService(_itemFactory.CreateItem(_currentTime));
         }
 
         public override void PrintStats(bool finalStats)

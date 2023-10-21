@@ -14,6 +14,6 @@ namespace Lab3.Model.NextElementSelector
             _nextElements = nextElements;
         }
 
-        public abstract Element<T> GetNextElement();
+        public abstract Element<T> GetNextElement(DefaultQueueItem item);
     }
 }

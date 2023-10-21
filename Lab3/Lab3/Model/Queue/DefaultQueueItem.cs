@@ -2,5 +2,9 @@
 {
     public class DefaultQueueItem
     {
+        public virtual int GetIndexGenerator() 
+        {
+            return 0;
+        }
     }
 }

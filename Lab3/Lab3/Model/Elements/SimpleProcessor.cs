@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Collections.Generic;
 using Lab3.Model.DelayGenerator;
 using Lab3.Model.Queue;
 
@@ -7,6 +7,8 @@ namespace Lab3.Model.Elements
 {
     public class SimpleProcessor<T> : Element<T> where T : DefaultQueueItem
     {
+        public T ProcessingItem { get; private set; }
+
         public SimpleProcessor(string name, IDelayGenerator delayGenerator, IDelayGenerator nextDelayGenerator = null)
             :base(name, delayGenerator)
         {
@@ -16,29 +18,50 @@ namespace Lab3.Model.Elements
             if (nextDelayGenerator != null)
             {
                 Processing = true;
-                SetNextTime(_delayGenerator.GetDelay());
-                _delayGenerator = nextDelayGenerator;
+                SetNextTime(_delayGenerators[0].GetDelay());
+                _delayGenerators[0] = nextDelayGenerator;
             }
         }
 
-        public override void StartService()
+        public SimpleProcessor(string name, List<IDelayGenerator> delayGenerators, IDelayGenerator nextDelayGenerator = null)
+            : base(name, delayGenerators)
         {
+            Processing = false;
+            SetNextTime(Double.PositiveInfinity);
+
+            if (nextDelayGenerator != null)
+            {
+                Processing = true;
+                SetNextTime(_delayGenerators[0].GetDelay());
+                _delayGenerators[0] = nextDelayGenerator;
+            }
+        }
+
+        public override void StartService(T item)
+        {
+            ProcessingItem = item;
+
             Console.WriteLine($".{Name}: start service, time: {_currentTime}");
             Processing = true;
-            SetNextTime(_currentTime + _delayGenerator.GetDelay());
+
+            int index = item != null ? item.GetIndexGenerator() : 0;
+            index = index < _delayGenerators.Count ? index : 0;
+            SetNextTime(_currentTime + _delayGenerators[index].GetDelay());
         }
 
         public override void FinishService()
         {
             base.FinishService();
             Processing = false;
+
+            ProcessingItem = null;
         }
 
         public void SetStartConditions(IDelayGenerator newDelayGenerator)
         {
             Processing = true;
-            SetNextTime(_delayGenerator.GetDelay());
-            _delayGenerator = newDelayGenerator;
+            SetNextTime(_delayGenerators[0].GetDelay());
+            _delayGenerators[0] = newDelayGenerator;
         }
     }
 }

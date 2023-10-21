@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 using Lab3.Model.DelayGenerator;
 using Lab3.Model.Queue;
@@ -13,7 +14,7 @@ namespace Lab3.Model.Elements
 
         protected int _countProcessed;
 
-        protected IDelayGenerator _delayGenerator;
+        protected List<IDelayGenerator> _delayGenerators;
         private double _nextTime;
         protected double _currentTime;
 
@@ -34,10 +35,28 @@ namespace Lab3.Model.Elements
 
             _currentTime = 0;
 
-            _delayGenerator = delayGenerator;
+            _delayGenerators = new List<IDelayGenerator>();
+            _delayGenerators.Add(delayGenerator);
         }
 
-        public virtual void StartService() { Processing = true; }
+        public Element(string name, List<IDelayGenerator> delayGenerators)
+        {
+            Name = name;
+
+            _currentTime = 0;
+
+            _delayGenerators = delayGenerators;
+        }
+
+        public Element(string name)
+        {
+            Name = name;
+            _currentTime = 0;
+
+            _delayGenerators = null;
+        }
+
+        public virtual void StartService(T item) { Processing = true; }
 
         public virtual void FinishService() 
         { 

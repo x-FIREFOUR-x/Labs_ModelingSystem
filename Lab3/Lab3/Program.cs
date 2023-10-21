@@ -13,14 +13,14 @@ namespace Lab3
     {
         public static void Main(string[] args)
         {
-            Model<DefaultQueueItem> model3 = CreateBankModel();
-            model3.Simulation(100, true);
+            Model<Patient> modelHospital = CreateHospitalModel();
+            modelHospital.Simulation(300, true);
 
-            //Model.Model model3 = CreateScheme2();
-            //model3.Simulation(100, true);
+            //Model<DefaultQueueItem> modelBank = CreateBankModel();
+            //modelBank.Simulation(100, false);
 
-            //Model.Model model3 = CreateModelCombineProcess();
-            //model3.Simulation(100, false);
+            //Model<DefaultQueueItem> model = CreateScheme();
+            //model.Simulation(100, false);
         }
 
         private static Model<DefaultQueueItem> CreateBankModel()
@@ -62,7 +62,7 @@ namespace Lab3
                                 }
                                 else
                                 {
-                                    process2.StartService();
+                                    process2.StartService(item);
                                 }
                             }
                         }
@@ -70,10 +70,81 @@ namespace Lab3
                 }
             };
             
-            return new Model<DefaultQueueItem>(elements);
+            return new Model<DefaultQueueItem>(elements, ActionChangeQueue);
         }
-
         
+        
+        private static Model<Patient> CreateHospitalModel()
+        {
+            Process<Patient> receptionDepartment = new Process<Patient>("ReceptionDepartment", 100, new List<Element<Patient>> {
+                new SimpleProcessor<Patient>("Doctor1", new List<IDelayGenerator>{
+                                                            new ExponentialDelayGenerator(15),
+                                                            new ExponentialDelayGenerator(40),
+                                                            new ExponentialDelayGenerator(30)}),
+                new SimpleProcessor<Patient>("Doctor2", new List<IDelayGenerator>{
+                                                            new ExponentialDelayGenerator(15),
+                                                            new ExponentialDelayGenerator(40),
+                                                            new ExponentialDelayGenerator(30)}),
+            });
+
+            Process<Patient> wards = new Process<Patient>("Wards", 100, new List<Element<Patient>> {
+                new SimpleProcessor<Patient>("Accompanying1", new UniformDelayGenerator(3, 8)),
+                new SimpleProcessor<Patient>("Accompanying2", new UniformDelayGenerator(3, 8)),
+                new SimpleProcessor<Patient>("Accompanying3", new UniformDelayGenerator(3, 8)),
+            });
+
+            Process<Patient> pathToLab = new Process<Patient>("PathToLab", 0, new List<Element<Patient>> {
+                new SimpleProcessor<Patient>("Go1", new UniformDelayGenerator(2, 5)),
+                new SimpleProcessor<Patient>("Go2", new UniformDelayGenerator(2, 5)),
+                new SimpleProcessor<Patient>("Go3", new UniformDelayGenerator(2, 5)),
+                new SimpleProcessor<Patient>("Go4", new UniformDelayGenerator(2, 5)),
+                new SimpleProcessor<Patient>("Go5", new UniformDelayGenerator(2, 5)),
+                new SimpleProcessor<Patient>("Go6", new UniformDelayGenerator(2, 5)),
+                new SimpleProcessor<Patient>("Go7", new UniformDelayGenerator(2, 5)),
+            });
+
+            Process<Patient> registryLab = new Process<Patient>("RegistryLab", 100, new List<Element<Patient>> {
+                new SimpleProcessor<Patient>("register", new ErlangDelayGenerator(4.5, 3)),
+            });
+
+            Process<Patient> lab = new Process<Patient>("Laboratory", 100, new List<Element<Patient>> {
+                new SimpleProcessor<Patient>("lab1", new ErlangDelayGenerator(4, 2)),
+                new SimpleProcessor<Patient>("lab2", new ErlangDelayGenerator(4, 2))
+            });
+
+            Dispose<Patient> dispose = new Dispose<Patient>("Exit");
+
+            receptionDepartment.NextElementSelector = new NextElementItemTypeSelector<Patient>(
+                new List<(Element<Patient>, double)> { (wards, 1), (pathToLab, 2), (pathToLab, 3) });
+
+            wards.NextElementSelector = new NextElementProbabilitySelector<Patient> (
+                new List<(Element<Patient>, double)> { (dispose, 1), });
+
+            pathToLab.NextElementSelector = new NextElementProbabilitySelector<Patient>(
+                new List<(Element<Patient>, double)> { (registryLab, 1.0) });
+
+            registryLab.NextElementSelector = new NextElementProbabilitySelector<Patient>(
+                new List<(Element<Patient>, double)> { (lab, 1.0) });
+
+            lab.NextElementSelector = new NextElementItemTypeSelector<Patient>(
+                new List<(Element<Patient>, double)> { (receptionDepartment, 2), (dispose, 3) });
+
+            Create<Patient> create = new Create<Patient>("Create", new ExponentialDelayGenerator(15));
+            create.NextElementSelector = new NextElementPrioritySelector<Patient>(new List<(Element<Patient>, double)>{(receptionDepartment, 1)});
+
+            List<Element<Patient>> elements = new();
+            elements.Add(create);
+            elements.Add(receptionDepartment);
+            elements.Add(wards);
+            elements.Add(pathToLab);
+            elements.Add(registryLab);
+            elements.Add(lab);
+            elements.Add(dispose);
+            
+            return new Model<Patient>(elements);
+        }
+        
+
         private static Model<DefaultQueueItem> CreateScheme()
         {
             Process<DefaultQueueItem> process1 = new Process<DefaultQueueItem>("Process1", 4, new List<Element<DefaultQueueItem>> {
@@ -92,61 +163,5 @@ namespace Lab3
 
             return new Model<DefaultQueueItem>(elements);
         }
-
-        /*
-        private static Model.Model CreateScheme2()
-        {
-            Process process2 = new Process("Process2", 4, new List<Element> {
-                new SimpleProcessor("p1", new ConstantDelayGenerator(4))
-            });
-            process2.NextElementSelector = new NextElementPrioritySelector(new List<(Element, double)> ());
-
-            Process process1 = new Process("Process1", 4, new List<Element> {
-                new SimpleProcessor("p1", new ConstantDelayGenerator(3)),
-                new SimpleProcessor("p2", new ConstantDelayGenerator(3)),
-            });
-            process1.NextElementSelector = new NextElementPrioritySelector(new List<(Element, double)> { (process1, 1), (process2, 3) });
-
-            Create create = new Create("Create", new ConstantDelayGenerator(2));
-            create.NextElementSelector = new NextElementPrioritySelector(new List<(Element, double)> { (process1, 1.0) });
-
-            List<Element> elements = new();
-            elements.Add(create);
-            elements.Add(process1);
-            elements.Add(process2);
-
-            return new Model.Model(elements);
-        }
-
-        private static Model.Model CreateModelCombineProcess()
-        {
-            Process process3 = new Process("Process3", 4, new List<Element> {
-                new SimpleProcessor("p1", new ConstantDelayGenerator(5))
-            });
-            process3.NextElementSelector = new NextElementProbabilitySelector(new List<(Element, double)>());
-
-            Process process2 = new Process("Process2", 4, new List<Element> {
-                new SimpleProcessor("p1", new ConstantDelayGenerator(4))
-            });
-            process2.NextElementSelector = new NextElementProbabilitySelector(new List<(Element, double)> { (process3, 1.0) });
-
-            Process process1 = new Process("Process1", 4, new List<Element> {
-                new SimpleProcessor("p1", new ConstantDelayGenerator(3)),
-                new SimpleProcessor("p2", new ConstantDelayGenerator(3)),
-            });
-            process1.NextElementSelector = new NextElementProbabilitySelector(new List<(Element, double)> { (process2, 1.0) });
-
-            Create create = new Create("Create", new ConstantDelayGenerator(2));
-            create.NextElementSelector = new NextElementProbabilitySelector(new List<(Element, double)> { (process1, 1.0) });
-
-            List<Element> elements = new();
-            elements.Add(create);
-            elements.Add(process1);
-            elements.Add(process2);
-            elements.Add(process3);
-
-            return new Model.Model(elements);
-        }
-        */
     }
 }

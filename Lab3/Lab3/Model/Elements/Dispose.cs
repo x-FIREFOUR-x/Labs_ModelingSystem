@@ -41,8 +41,7 @@ namespace Lab3.Model.Elements
             {
                 if (typeof(T) == typeof(Patient))
                 {
-                    Console.WriteLine("Patient");
-                    Console.WriteLine("Type   StartTime   FinishTime");
+                    Console.WriteLine("\t\tPatients Type   StartTime   FinishTime");
                     foreach (var item in _finishItems)
                     {
                         item.PrintStats();

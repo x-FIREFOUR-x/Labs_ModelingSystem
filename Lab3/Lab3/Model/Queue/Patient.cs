@@ -48,7 +48,7 @@ namespace Lab3.Model.Queue
 
         public override void PrintStats()
         {
-            Console.WriteLine($"{StartTypePatient};       {Math.Round(_startTime, 2)};      {Math.Round(_finishTime, 2)}");
+            Console.WriteLine($"\t\t\t{StartTypePatient}       {Math.Round(_startTime, 2)}      {Math.Round(_finishTime, 2)}");
         }
     }
 }

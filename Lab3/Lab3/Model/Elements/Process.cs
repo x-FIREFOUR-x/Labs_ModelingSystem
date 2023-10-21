@@ -15,6 +15,9 @@ namespace Lab3.Model.Elements
 
         private List<Element<T>> _processors;
 
+        private List<double> _timesIncome;
+        public bool PrintTimesIncome { get; set; }
+
         public int QueueSize { get => _queue.Size; }
         public int QueueMaxSize { get => _queue.MaxSize; }
 
@@ -45,7 +48,10 @@ namespace Lab3.Model.Elements
             _processors = processors;
             SetNextTime(Double.PositiveInfinity);
 
-            if(startQueueSize == 0)
+            _timesIncome = new List<double>();
+            PrintTimesIncome = false;
+
+            if (startQueueSize == 0)
             {
                 _queue = new ProcessQueue<T>(maxQueueSize);
             }
@@ -57,6 +63,8 @@ namespace Lab3.Model.Elements
 
         public override void StartService(T item)
         {
+            _timesIncome.Add(_currentTime);
+
             Console.Write(Name);
             if (TryStartService(item))
             {
@@ -129,6 +137,17 @@ namespace Lab3.Model.Elements
                 Console.WriteLine($"\t\tAverage queue size: {_averageQueueDividend / _currentTime}");
                 Console.WriteLine($"\t\tFailure probability: {(float)_countFailures / (_countFailures + _countProcessed)}");
                 Console.WriteLine($"\t\tAverage workload: {_timeWorking / _currentTime}");
+
+                if(PrintTimesIncome)
+                {
+                    Console.Write("\t\tIntervals between incomes: ");
+                    for (int i = 1; i < _timesIncome.Count; i++)
+                    {
+                        Console.Write($"{Math.Round(_timesIncome[i] - _timesIncome[i-1], 2)} ");
+                    }
+                    Console.WriteLine();
+                }
+                
             }
         }
 

@@ -117,6 +117,7 @@ namespace Lab3
                 new SimpleProcessor<Patient>("lab1", new ErlangDelayGenerator(4, 2), ActionChangeTypePatientAfterLab),
                 new SimpleProcessor<Patient>("lab2", new ErlangDelayGenerator(4, 2), ActionChangeTypePatientAfterLab)
             });
+            lab.PrintTimesIncome = true;
 
             Dispose<Patient> dispose = new Dispose<Patient>("Exit");
 

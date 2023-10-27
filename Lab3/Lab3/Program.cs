@@ -18,9 +18,6 @@ namespace Lab3
 
             Model<Patient> modelHospital = CreateHospitalModel();
             modelHospital.Simulation(1000, false);
-
-            //Model<DefaultQueueItem> model = CreateScheme();
-            //model.Simulation(100, false);
         }
 
         private static Model<DefaultQueueItem> CreateBankModel()
@@ -151,24 +148,5 @@ namespace Lab3
             return new Model<Patient>(elements);
         }
         
-
-        private static Model<DefaultQueueItem> CreateScheme()
-        {
-            Process<DefaultQueueItem> process1 = new Process<DefaultQueueItem>("Process1", 4, new List<Element<DefaultQueueItem>> {
-                new SimpleProcessor<DefaultQueueItem>("p1", new ConstantDelayGenerator(5)),
-            });
-            process1.NextElementSelector =
-                new NextElementPrioritySelector<DefaultQueueItem>(new List<(Element<DefaultQueueItem>, double)> ());
-
-            Create<DefaultQueueItem> create = new Create<DefaultQueueItem>("Create", new ConstantDelayGenerator(5));
-            create.NextElementSelector =
-                new NextElementPrioritySelector<DefaultQueueItem>(new List<(Element<DefaultQueueItem>, double)> { (process1, 1.0) });
-
-            List<Element<DefaultQueueItem>> elements = new();
-            elements.Add(create);
-            elements.Add(process1);
-
-            return new Model<DefaultQueueItem>(elements);
-        }
     }
 }

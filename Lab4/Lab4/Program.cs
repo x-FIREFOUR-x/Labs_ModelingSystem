@@ -13,11 +13,11 @@ namespace Lab4
     {
         public static void Main(string[] args)
         {
-            //Model<DefaultQueueItem> model = createSequentialModel(30);
-            //model.Simulation(100, false);
+            Model<DefaultQueueItem> model = createSequentialModel(20);
+            model.Simulation(100, true);
 
-            Model < DefaultQueueItem > model = createBranchesModel(5, 6);
-            model.Simulation(100, false);
+            //Model < DefaultQueueItem > model = createBranchesModel(5, 4);
+            //model.Simulation(100, true);
         }
 
         private static Model<DefaultQueueItem> createSequentialModel(int countProcesses)

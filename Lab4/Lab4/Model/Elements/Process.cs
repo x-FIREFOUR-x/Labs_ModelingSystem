@@ -65,7 +65,7 @@ namespace Lab4.Model.Elements
         {
             _timesIncome.Add(_currentTime);
 
-            Console.Write(Name);
+            //Console.Write(Name);
             if (TryStartService(item))
             {
                 return;
@@ -73,13 +73,13 @@ namespace Lab4.Model.Elements
             
             if (QueueSize < QueueMaxSize)
             {
-                Console.WriteLine($": add item in queue, time: {_currentTime}");
+                //Console.WriteLine($": add item in queue, time: {_currentTime}");
 
                 _queue.PutItem(item);
                 return;
             }
 
-            Console.WriteLine($": failure, time: {_currentTime}");
+            //Console.WriteLine($": failure, time: {_currentTime}");
             _countFailures++;
         }
 
@@ -94,14 +94,14 @@ namespace Lab4.Model.Elements
                     T item = ((SimpleProcessor<T>)finishProcessor).ProcessingItem;
 
                     finishProcessor.FinishService();
-                    Console.WriteLine($"{Name}.{finishProcessor.Name}: finish service, time: {_currentTime}");
+                    //Console.WriteLine($"{Name}.{finishProcessor.Name}: finish service, time: {_currentTime}");
 
                     Element<T> nextElement = NextElementSelector?.GetNextElement(item);
                     nextElement?.StartService(item);
 
                     if (QueueSize > 0)
                     {
-                        Console.Write(Name);
+                        //Console.Write(Name);
                         item = _queue.GetItem();
                         finishProcessor.StartService(item);
                     }

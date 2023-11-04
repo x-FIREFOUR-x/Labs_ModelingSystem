@@ -28,7 +28,7 @@ namespace Lab4.Model.Elements
         {
             base.FinishService();
 
-            Console.WriteLine($"{Name}: finish, time: {_currentTime}");
+            //Console.WriteLine($"{Name}: finish, time: {_currentTime}");
 
             SetNextTime(_currentTime + _delayGenerators[0].GetDelay());
 

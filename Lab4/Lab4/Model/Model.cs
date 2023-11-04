@@ -23,7 +23,7 @@ namespace Lab4.Model
             _additionalAction = additionalAction;
         }
 
-        public void Simulation(double simulationTime, bool stepsStats = false)
+        public void Simulation(double simulationTime, bool finalStats = false, bool stepsStats = false)
         {
             while (_currentTime < simulationTime)
             {
@@ -33,7 +33,7 @@ namespace Lab4.Model
                 foreach (var element in _elements)
                     element.UpdatedCurrentTime(_currentTime);
 
-                Console.WriteLine();
+                //Console.WriteLine();
                 foreach (var element in _elements)
                 {
                     if (element.TryFinish())
@@ -60,12 +60,15 @@ namespace Lab4.Model
                 }
             }
 
-            Console.WriteLine("\n========================== Finish Stats ===============================");
-            foreach (var element in _elements)
+            if (finalStats)
             {
-                element.PrintStats(true);
+                Console.WriteLine("\n========================== Finish Stats ===============================");
+                foreach (var element in _elements)
+                {
+                    element.PrintStats(true);
+                }
+                Console.WriteLine("========================================================================");
             }
-            Console.WriteLine("========================================================================");
         }
     }
 }

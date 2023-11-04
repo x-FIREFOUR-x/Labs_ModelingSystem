@@ -61,7 +61,7 @@ namespace Lab4.Model.Elements
         {
             ProcessingItem = item;
 
-            Console.WriteLine($".{Name}: start service, time: {_currentTime}");
+            //Console.WriteLine($".{Name}: start service, time: {_currentTime}");
             Processing = true;
 
             int index = item != null ? item.GetIndexGenerator() : 0;

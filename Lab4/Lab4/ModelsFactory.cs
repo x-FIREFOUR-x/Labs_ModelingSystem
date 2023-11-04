@@ -20,7 +20,7 @@ namespace Lab4
             Element<DefaultQueueItem> prevElement = create;
             for (int i = 0; i < countProcesses; i++)
             {
-                Process<DefaultQueueItem> process = new Process<DefaultQueueItem>((i + 1).ToString(), 2, new List<Element<DefaultQueueItem>> {
+                Process<DefaultQueueItem> process = new Process<DefaultQueueItem>((i + 1).ToString(), 0, new List<Element<DefaultQueueItem>> {
                     new SimpleProcessor<DefaultQueueItem>((i+1).ToString(), new ExponentialDelayGenerator(0.5))}
                 );
 
@@ -51,7 +51,7 @@ namespace Lab4
                 for (int j = 0; j < countProcess; j++)
                 {
                     string name = (i + 1).ToString() + "-" + (j + 1).ToString();
-                    Process<DefaultQueueItem> process = new Process<DefaultQueueItem>(name, 2, new List<Element<DefaultQueueItem>> {
+                    Process<DefaultQueueItem> process = new Process<DefaultQueueItem>(name, 0, new List<Element<DefaultQueueItem>> {
                         new SimpleProcessor<DefaultQueueItem>(name, new ExponentialDelayGenerator(0.5))}
                     );
 

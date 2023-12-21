@@ -1,0 +1,58 @@
+
+                                      ARENA Simulation Results
+                                                адмін
+
+                                  Summary for Replication 1 of 1
+
+Project: Unnamed Project                                             Run execution date :12/16/2023
+Analyst: адмін                                                       Model revision date:12/16/2023
+
+Replication ended at time      : 1000.0 Hours 
+Base Time Units: Hours
+
+                                           TALLY VARIABLES
+
+Identifier                                  Average   Half Width  Minimum    Maximum   Observations
+___________________________________________________________________________________________________
+
+Entity 1.VATime                             40.909     (Corr)     .01809     501.11        960    
+Entity 1.NVATime                            .00000     .00000     .00000     .00000        960    
+Entity 1.WaitTime                           .00000     .00000     .00000     .00000        960    
+Entity 1.TranTime                           .00000     .00000     .00000     .00000        960    
+Entity 1.OtherTime                          .00000     .00000     .00000     .00000        960    
+Entity 1.TotalTime                          40.909     (Corr)     .01809     501.11        960    
+SubProcess1.Queue.WaitingTime               .00000     (Insuf)    .00000     .00000        227    
+SubProcess3.Queue.WaitingTime               .00000     (Insuf)    .00000     .00000        185    
+SubProcess4.Queue.WaitingTime               .00000     (Insuf)    .00000     .00000        188    
+SubProcess5.Queue.WaitingTime               .00000     (Insuf)    .00000     .00000        165    
+SubProcess2.Queue.WaitingTime               .00000     (Insuf)    .00000     .00000        196    
+
+                                     DISCRETE-CHANGE VARIABLES
+
+Identifier                                  Average   Half Width  Minimum    Maximum   Final Value
+___________________________________________________________________________________________________
+
+Entity 1.WIP                                42.207     (Corr)     .00000     69.000     55.000    
+Resource 1.NumberBusy                       .93380     (Corr)     .00000     1.0000     1.0000    
+Resource 1.NumberScheduled                  1.0000     (Insuf)    1.0000     1.0000     1.0000    
+Resource 1.Utilization                      .93380     (Corr)     .00000     1.0000     1.0000    
+SubProcess1.Queue.NumberInQueue             .00000     (Insuf)    .00000     .00000     .00000    
+SubProcess3.Queue.NumberInQueue             .00000     (Insuf)    .00000     .00000     .00000    
+SubProcess4.Queue.NumberInQueue             .00000     (Insuf)    .00000     .00000     .00000    
+SubProcess5.Queue.NumberInQueue             .00000     (Insuf)    .00000     .00000     .00000    
+SubProcess2.Queue.NumberInQueue             .00000     (Insuf)    .00000     .00000     .00000    
+
+                                             OUTPUTS
+
+Identifier                                   Value
+_____________________________________________________________
+
+Entity 1.NumberIn                           1015.0    
+Entity 1.NumberOut                          960.00    
+Resource 1.NumberSeized                     961.00    
+Resource 1.ScheduledUtilization             .93380    
+System.NumberOut                            960.00    
+
+
+Simulation run time: 0.52 minutes.
+Simulation run complete.

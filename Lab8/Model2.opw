@@ -1,0 +1,49 @@
+[RESOURCES]
+Resource 1
+[VARIABLES]
+Process 5.NumberOut
+Decide 1.NumberOut False
+Decide 2.NumberOut False
+Decide 3.NumberOut False
+Decide 4.NumberOut False
+Decide 5.NumberOut False
+Process 4.NumberOut
+Move to 3th place pipeline.NumberIn
+Move to 3th place pipeline.NumberOut
+Process 2.NumberOut
+Process 2.NumberIn
+Process 3.NumberIn
+Move to 4th place pipeline.NumberIn
+Move to 4th place pipeline.NumberOut
+Dispose 2.NumberOut
+Move to 1th place pipeline.NumberIn
+Move to 1th place pipeline.NumberOut
+Move to 5th place pipeline.NumberIn
+Move to 5th place pipeline.NumberOut
+Process 1.NumberIn
+Create 1.NumberOut
+SubProcess1.NumberIn
+SubProcess2.NumberIn
+SubProcess3.NumberIn
+SubProcess4.NumberIn
+SubProcess5.NumberIn
+SubProcess1.NumberOut
+SubProcess2.NumberOut
+SubProcess3.NumberOut
+SubProcess4.NumberOut
+SubProcess5.NumberOut
+Dispose 1.NumberOut
+Dispose 4.NumberOut
+Move to 2th place pipeline.NumberIn
+Move to 2th place pipeline.NumberOut
+Dispose 5.NumberOut
+Process 5.NumberIn
+Process 4.NumberIn
+Process 3.NumberOut
+Dispose 3.NumberOut
+Process 1.NumberOut
+Decide 1.NumberOut True
+Decide 2.NumberOut True
+Decide 3.NumberOut True
+Decide 4.NumberOut True
+Decide 5.NumberOut True
